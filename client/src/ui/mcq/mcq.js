@@ -23,8 +23,11 @@ MCQ.render = function(destination){
 
 
 // Renders one question and shuffles the answers
-MCQ.renderQuestion = function(question){
+MCQ.renderQuestion = function(question, index){
     if (!question) return;
+
+    // Change the questino number
+    document.getElementById("current-question-index").textContent = (index + 1) + "/" + MCQ.flagList.length;
 
     const flagImage = document.getElementById("question-image");
     const buttons = document.querySelectorAll(".answer-mcq-button ");
@@ -82,16 +85,21 @@ MCQ.renderQuestion = function(question){
 
 // Starts the MCQ from a list of flags
 MCQ.start = function(flagList){
+    // Remove the overlay and blur
+    document.getElementById("overlay").classList.add("hidden");
+    document.getElementById("quiz-container").classList.remove("blur-sm");
+
+
     MCQ.flagList = flagList;
     MCQ.currentQuestionIndex = 0;
-    MCQ.renderQuestion(MCQ.flagList[MCQ.currentQuestionIndex]);
+    MCQ.renderQuestion(MCQ.flagList[MCQ.currentQuestionIndex], MCQ.currentQuestionIndex);
 }
 
 // Goes to the next question
 MCQ.nextQuestion = function(){
     MCQ.currentQuestionIndex++;
     if (MCQ.currentQuestionIndex < MCQ.flagList.length) {
-        MCQ.renderQuestion(MCQ.flagList[MCQ.currentQuestionIndex]);
+        MCQ.renderQuestion(MCQ.flagList[MCQ.currentQuestionIndex], MCQ.currentQuestionIndex);   
     } else {
         alert("Quiz finished!");
     }

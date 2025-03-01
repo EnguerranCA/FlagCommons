@@ -10,7 +10,7 @@ const galleryTemplate = await galleryFile.text();
 let Gallery = {};
 
 // Render a gallery of flag
-Gallery.render = function(flagList){
+Gallery.render = function(destination, flagList){
     // Check the flagList content
     console.log("test" + flagList);
 
@@ -22,7 +22,7 @@ Gallery.render = function(flagList){
         galleryContainer.innerHTML += cell;
     });
 
-    document.body.appendChild(galleryContainer);
+    destination.appendChild(galleryContainer);
 }
 
 

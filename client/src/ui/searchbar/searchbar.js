@@ -22,7 +22,7 @@ Searchbar.searchPage = async function(){
 
     
     MCQ.start(await Flags.getByPage(pageName));
-    Gallery.render(await Flags.getByPage(pageName));
+    Gallery.render(document.getElementById("gallery"),await Flags.getByPage(pageName));
 }
 
 // Renders the predefined options in the select element

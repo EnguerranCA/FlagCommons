@@ -19,7 +19,7 @@ Flags.getByPage = async function(page) {
     // Go across the pages to take the names of the flags and the links
     for (let page in data.query.pages) {
         let pageData = data.query.pages[page]
-        let flagName = pageData.title.replace(/^File:/, '').replace(/^Flag of /, '').replace(/\.svg$/, '');
+        let flagName = pageData.title.replace(/^File:/, '').replace(/^Flag of /, '').replace(/\.svg$/, '').replace(/\.png$/, '').replace(/\.jpg$/, '');
         let flagUrl = pageData.imageinfo[0].url;
 
 
@@ -38,6 +38,10 @@ Flags.getByPage = async function(page) {
 
     return flags;
 }
+
+// Get the flags from a Category
+// Example : https://commons.wikimedia.org/wiki/Category:SVG_blue_ensigns_of_France
+
 
 Flags.getPredifinedOptions = async function() {
     const response = await fetch('./src/data/json/predefined.json');
