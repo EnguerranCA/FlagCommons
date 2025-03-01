@@ -16,13 +16,30 @@ Searchbar.searchPage = async function(){
 
     // Parse the link
     let url = new URL(search);
-    let pageName = url.pathname.split("/").pop();
+    Searchbar.pageName = url.pathname.split("/").pop();
 
-    console.log(pageName);
+    console.log(Searchbar.pageName);
 
-    
-    MCQ.start(await Flags.getByPage(pageName));
-    Gallery.render(document.getElementById("gallery"),await Flags.getByPage(pageName));
+    // Clear the content of the gallery and the table if the quiz has started
+    if (MCQ.started) {
+        Gallery.clear(document.getElementById("gallery"));
+        MCQ.clearTable(document.getElementById("mcq"));
+    }
+
+    // Render the filters that are the name of the sections of the page
+    Searchbar.renderFilters(await Flags.getSections(Searchbar.pageName));
+
+
+    // Check if the page is a category to adapt the request
+    if (Searchbar.pageName.includes("Category:")){
+        Searchbar.pageName = Searchbar.pageName.replace("Category:", "");
+        MCQ.start(await Flags.getByCategory(Searchbar.pageName));
+        Gallery.render(document.getElementById("gallery"),await Flags.getByCategory(Searchbar.pageName));
+    } else {
+        MCQ.start(await Flags.getByPage(Searchbar.pageName));
+        Gallery.render(document.getElementById("gallery"),await Flags.getByPage(Searchbar.pageName));
+    }
+
 }
 
 // Renders the predefined options in the select element
@@ -63,6 +80,7 @@ Searchbar.render = async function(destination){
     document.getElementById("predefined-lists-select").addEventListener("change", this.setSearch);
 }
 
+
 // Sets the predefined search values from the selected option
 Searchbar.setSearch = function(){
     let selectElement = document.getElementById("predefined-lists-select");
@@ -74,7 +92,68 @@ Searchbar.setSearch = function(){
     search.value = optionUrl;
 }
 
+// Render the filters
+Searchbar.renderFilters = function(sections){
+    //Clear the filters
+    document.getElementById("filters-list").innerHTML = ""; 
+    let filters = document.getElementById("filters-list");
 
+    sections.forEach(section => {
+        let filterElement = document.createElement("div");
+        filterElement.classList.add("filter-sort");
+
+        let labelElement = document.createElement("label");
+        labelElement.classList.add("inline-flex", "items-center");
+
+        let checkboxElement = document.createElement("input");
+        checkboxElement.type = "checkbox";
+        checkboxElement.classList.add("form-checkbox");
+        checkboxElement.onclick = function(){
+            Searchbar.updateFilters();
+        };
+
+        let spanElement = document.createElement("span");
+        spanElement.classList.add("ml-2");
+        spanElement.textContent = section.line;
+
+        labelElement.appendChild(checkboxElement);
+        labelElement.appendChild(spanElement);
+        filterElement.appendChild(labelElement);
+        filters.appendChild(filterElement);
+    });
+}
+
+// Update the filters, when one is checked or unchecked, the gallery and the table are updated accordingly
+Searchbar.updateFilters = async function(){
+    // Replace the image of the MCQ with a loader
+    document.getElementById("question-image").src = "https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif";
+
+    // Get the checked filters
+    let filters = document.querySelectorAll(".filter-sort input");
+    let checkedFilters = Array.from(filters).filter(filter => filter.checked).map(filter => filter.nextSibling.textContent);
+
+    // Get the flags of the page
+    let allSectionsFlags = await Flags.getSortedBySection(Searchbar.pageName);
+    let filteredFlags = [];
+
+    // Get the flags that are in the checked sections
+    checkedFilters.forEach(section => {
+        if (allSectionsFlags[section]) {
+            filteredFlags = filteredFlags.concat(allSectionsFlags[section]);
+        }
+    });
+
+    console.log("filtered flags",filteredFlags);
+    
+    // Clear the gallery and the table
+    Gallery.clear(document.getElementById("gallery"));
+    MCQ.clearTable(document.getElementById("mcq"));
+
+    // Render the gallery and the table
+    Gallery.render(document.getElementById("gallery"), filteredFlags);
+    MCQ.start(filteredFlags);
+
+}
 
 
 export {Searchbar};

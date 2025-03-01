@@ -1,18 +1,18 @@
 <div class="max-w-xl w-full p-4 relative">
     <header class="bg-white text-black p-4">
-        <h1 class="text-4xl font-extrabold text-center">Flag quiz</h1>
+        <h1 class="text-4xl font-extrabold text-center">Wiki quiz</h1>
     </header>
     <div class="bg-white shadow-md rounded-lg p-6 mt-6">
         
-        <div id="overlay" class="absolute inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+        <div id="overlay-import" class="absolute inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
             <div class="bg-white p-6 rounded-lg shadow-lg text-center ">
                 <h2 class="text-2xl font-bold mb-4">Import a flag list to start the quiz</h2>
             </div>
         </div>
         <div id="quiz-container" class="filter blur-sm">
-        <img id="question-image" src="{{path}}" alt="Question Flag" class="w-full h-64 object-cover rounded-md mb-4">
+        <img id="question-image" src="{{path}}" alt="Question Flag" class="w-full h-64 object-contain rounded-md mb-4">
         <p id="current-question-index" class="text-xl font-bold" >Question 0/20</p>
-        <h2 class="text-2xl font-bold mb-4">What is this flag ? </h2>
+        <h2 class="text-2xl font-bold mb-4">What is this image ? </h2>
         <div class="space-y-4">
             <button class="answer-mcq-button w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">{{answer1}}</button>
             <button class="answer-mcq-button w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">{{answer2}}</button>
@@ -21,6 +21,7 @@
         </div>
         <div class="bg-green-500 bg-red-500"></div>
     </div>
+    <div class="hidden"></div>
 
     </div>
 </div>

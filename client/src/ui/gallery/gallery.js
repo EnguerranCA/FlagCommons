@@ -25,6 +25,11 @@ Gallery.render = function(destination, flagList){
     destination.appendChild(galleryContainer);
 }
 
+// Clear the gallery content 
+Gallery.clear = function(destination){
+    destination.innerHTML = "";
+}
+
 
 
 

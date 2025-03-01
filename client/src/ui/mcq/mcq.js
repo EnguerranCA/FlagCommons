@@ -13,11 +13,14 @@ const cellTemplate = await cellFile.text();
 
 let MCQ = {};
 
+// Init the boolean to know if a quiz has started
+MCQ.started = false;
+
 // Renders the MCQ zone
 MCQ.render = function(destination){
     destination.innerHTML += template;
 
-    MCQ.renderQuestion();
+    // MCQ.renderQuestion();
     MCQ.renderTable(destination);
 }
 
@@ -86,9 +89,11 @@ MCQ.renderQuestion = function(question, index){
 // Starts the MCQ from a list of flags
 MCQ.start = function(flagList){
     // Remove the overlay and blur
-    document.getElementById("overlay").classList.add("hidden");
+    document.getElementById("overlay-import").classList.add("hidden");
     document.getElementById("quiz-container").classList.remove("blur-sm");
 
+    // Set the quiz as started
+    MCQ.started = true;
 
     MCQ.flagList = flagList;
     MCQ.currentQuestionIndex = 0;
@@ -112,11 +117,20 @@ MCQ.renderTable = function(destination){
     destination.innerHTML += tableTemplate;
 }
 
+// Clear the table
+MCQ.clearTable = function(){
+    document.getElementById("correct-answers").innerHTML = "";
+    document.getElementById("wrong-answers").innerHTML = "";
+}
+
 // Render a cell in the table
 MCQ.renderCell = function(flag, isCorrect){
     let cell = cellTemplate.replace('{{flagName}}', flag.name).replace('{{path}}', flag.url);
     let table = document.getElementById(isCorrect ? "correct-answers" : "wrong-answers");
     table.innerHTML += cell;
 }
+
+
+
 
 export {MCQ};
